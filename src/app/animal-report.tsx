@@ -1,6 +1,8 @@
+import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import {
     Alert,
+    Image,
     Pressable,
     ScrollView,
     StyleSheet,
@@ -19,6 +21,26 @@ export default function AnimalReportScreen() {
   const [location, setLocation] = useState('');
   const [contact, setContact] = useState('');
   const [urgency, setUrgency] = useState('High');
+  const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const pickAnimalPhoto = async () => {
+  try {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets.length > 0) {
+      setPhotoUri(result.assets[0].uri);
+    }
+  } catch {
+    Alert.alert(
+      'Unable to select photo',
+      'Something went wrong while opening your photo library. Please try again.'
+    );
+  }
+};
 
   const submitReport = () => {
     if (!description.trim() || !location.trim() || !contact.trim()) {
@@ -70,8 +92,34 @@ export default function AnimalReportScreen() {
             </Pressable>
           ))}
         </View>
+          <Text style={styles.label}>2. Add an animal photo (optional)</Text>
 
-        <Text style={styles.label}>2. Describe the situation</Text>
+<Pressable
+  style={styles.photoButton}
+  onPress={pickAnimalPhoto}
+>
+  <Text style={styles.photoButtonText}>
+    {photoUri ? 'Choose Another Photo' : '📷 Upload Animal Photo'}
+  </Text>
+</Pressable>
+
+{photoUri && (
+  <View style={styles.photoPreviewContainer}>
+    <Image
+      source={{ uri: photoUri }}
+      style={styles.photoPreview}
+      resizeMode="cover"
+    />
+
+    <Pressable
+      style={styles.removePhotoButton}
+      onPress={() => setPhotoUri(null)}
+    >
+      <Text style={styles.removePhotoText}>Remove Photo ✕</Text>
+    </Pressable>
+  </View>
+)}
+        <Text style={styles.label}>3. Describe the situation</Text>
         <TextInput
           style={[styles.input, styles.multiline]}
           placeholder="Where is the animal hurt? What happened?"
@@ -82,7 +130,7 @@ export default function AnimalReportScreen() {
           textAlignVertical="top"
         />
 
-        <Text style={styles.label}>3. Location</Text>
+        <Text style={styles.label}>4. Location</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter area, street, or nearby landmark"
@@ -91,7 +139,7 @@ export default function AnimalReportScreen() {
           onChangeText={setLocation}
         />
 
-        <Text style={styles.label}>4. Your contact number</Text>
+        <Text style={styles.label}>5. Your contact number</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter phone number"
@@ -101,7 +149,7 @@ export default function AnimalReportScreen() {
           keyboardType="phone-pad"
         />
 
-        <Text style={styles.label}>5. How urgent is it?</Text>
+        <Text style={styles.label}>6. How urgent is it?</Text>
         <View style={styles.options}>
           {urgencyLevels.map((level) => (
             <Pressable
@@ -237,4 +285,44 @@ const styles = StyleSheet.create({
     color: '#667085',
     marginTop: 20,
   },
+  photoButton: {
+  backgroundColor: '#FFFFFF',
+  borderWidth: 1,
+  borderColor: '#2F5DAB',
+  borderStyle: 'dashed',
+  borderRadius: 13,
+  padding: 18,
+  alignItems: 'center',
+},
+
+photoButtonText: {
+  color: '#2F5DAB',
+  fontSize: 15,
+  fontWeight: 'bold',
+},
+
+photoPreviewContainer: {
+  marginTop: 12,
+  alignItems: 'flex-start',
+},
+
+photoPreview: {
+  width: '100%',
+  height: 220,
+  borderRadius: 13,
+  backgroundColor: '#D7E0EF',
+},
+
+removePhotoButton: {
+  marginTop: 8,
+  paddingVertical: 8,
+  paddingHorizontal: 12,
+  backgroundColor: '#FDECEC',
+  borderRadius: 8,
+},
+
+removePhotoText: {
+  color: '#C62828',
+  fontWeight: '600',
+},
 });
