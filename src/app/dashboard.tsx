@@ -17,7 +17,16 @@ export default function DashboardScreen() {
       </View>
 
       <Text style={styles.sectionTitle}>How can we help today?</Text>
-
+      
+<Pressable
+  style={styles.actionCard}
+  onPress={() => router.push('/my-reports')}
+>
+  <Text style={styles.actionTitle}>📋 My Reports</Text>
+  <Text style={styles.actionDescription}>
+    View your saved animal reports and case IDs.
+  </Text>
+</Pressable>
       <Pressable
   style={styles.actionCard}
   onPress={() => router.push('/animal-report')}
@@ -118,3 +127,4 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
+// Testing dashboard editor

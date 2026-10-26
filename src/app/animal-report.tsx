@@ -1,16 +1,17 @@
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import {
-    Alert,
-    Image,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Alert,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { saveReport } from '../utils/reportsStorage';
 
 const animalTypes = ['Dog', 'Cat', 'Cow', 'Bird', 'Other'];
 const urgencyLevels = ['Low', 'Medium', 'High', 'Critical'];
@@ -42,23 +43,42 @@ export default function AnimalReportScreen() {
   }
 };
 
-  const submitReport = () => {
-    if (!description.trim() || !location.trim() || !contact.trim()) {
-      Alert.alert(
-        'Missing information',
-        'Please enter the situation, location, and contact number.'
-      );
-      return;
-    }
+const submitReport = async () => {
+  if (!description.trim() || !location.trim() || !contact.trim()) {
+    Alert.alert(
+      'Missing information',
+      'Please enter the situation, location, and contact number.'
+    );
+    return;
+  }
 
-    const caseId = `JS${Date.now().toString().slice(-6)}`;
+  const caseId = `JS${Date.now().toString().slice(-6)}`;
+
+  try {
+    await saveReport({
+      caseId,
+      animal,
+      description: description.trim(),
+      location: location.trim(),
+      contact: contact.trim(),
+      urgency,
+photoUri: photoUri,
+
+    });
 
     Alert.alert(
-      'Report prepared! 🐾',
-      `Case ID: ${caseId}\n\nAnimal: ${animal}\nUrgency: ${urgency}\n\nThis is a demonstration. Your report has not been sent to a rescue team yet.`,
+      'Report saved! 🐾',
+      `Case ID: ${caseId}\n\nAnimal: ${animal}\nUrgency: ${urgency}\n\nYour report has been saved on this device. It has not yet been sent to a rescue team.`,
       [{ text: 'OK' }]
     );
-  };
+  } catch (error) {
+    Alert.alert(
+      'Unable to save report',
+      'Something went wrong while saving your report. Please try again.'
+    );
+  }
+};
+
 
   return (
     <SafeAreaView style={styles.container}>
