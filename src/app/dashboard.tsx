@@ -37,12 +37,17 @@ export default function DashboardScreen() {
   </Text>
 </Pressable>
 
-      <View style={styles.actionCard}>
-        <Text style={styles.actionTitle}>🐶 Animal Care</Text>
-        <Text style={styles.actionDescription}>
-          Learn how to care for animals and keep them safe.
-        </Text>
-      </View>
+      
+<Pressable
+  style={styles.actionCard}
+  onPress={() => router.push('/animal-care')}
+>
+  <Text style={styles.actionTitle}>🐶 Animal Care</Text>
+  <Text style={styles.actionDescription}>
+    Learn how to care for animals and keep them safe.
+  </Text>
+</Pressable>
+
 
       <View style={styles.actionCard}>
         <Text style={styles.actionTitle}>💙 Rescue Support</Text>
