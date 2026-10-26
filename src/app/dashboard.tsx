@@ -49,12 +49,17 @@ export default function DashboardScreen() {
 </Pressable>
 
 
-      <View style={styles.actionCard}>
-        <Text style={styles.actionTitle}>💙 Rescue Support</Text>
-        <Text style={styles.actionDescription}>
-          Discover ways to support animal rescue efforts.
-        </Text>
-      </View>
+     
+<Pressable
+  style={styles.actionCard}
+  onPress={() => router.push('/sos')}
+>
+  <Text style={styles.actionTitle}>🚨 SOS Emergency</Text>
+  <Text style={styles.actionDescription}>
+    Find emergency contacts and get help for injured animals.
+  </Text>
+</Pressable>
+
 
       <Text style={styles.footer}>
         Every small act of kindness matters. 🐾
